@@ -1,0 +1,3 @@
+<p>Vous n'avez pas de compte? <a href="{{ url_for('register') }}">crer mon compte </a>.</p>
+<label for="name">Nom d'utilisateur :</label>
+        <input type="text" id="name" name="name" required><br>

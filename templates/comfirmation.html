@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hello World</title>
+</head>
+<body>
+
+{% if 'user_id' in session %}
+    <p>Connecté en tant qu'utilisateur  {{ user_details[0] }} / {{ user_details[1] }} </p>
+
+    <h2>Votre nouvel article a bien été mis à jour</h2>
+    <a href="{{ url_for('read') }}"><button>Retour au articles</button></a><hr>
+    <a href="{{ url_for('login', logout='true') }}"><button style="background-color: rgba(203, 39, 39, 0.68)">Se déconnecter</button></a>
+    
+{% endif %}
+
+
+
+
+{% if form_data %}
+    <p>Données du formulaire :</p>
+    <ul>
+        {% for key, value in form_data.items() %}
+            <li>{{ key }}: {{ value }}</li>
+        {% endfor %}
+    </ul>
+{% endif %}
+
+
+</body>
+</html>

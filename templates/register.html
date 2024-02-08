@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register</title>
+</head>
+<body>
+
+<h1>Creé mon compte</h1>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class="flash-messages">
+      {% for message in messages %}
+        <li class="flash-message">{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+
+<form action="/register" method="post">
+    <label for="name">Nom:</label>
+    <input type="text" id="name" name="name" required><br>
+
+    <label for="email">Adresse mail:</label>
+    <input type="email" id="email" name="email" required><br>
+
+    <label for="password">Mot de passe:</label>
+    <input type="password" id="password" name="password" required><br>
+
+    <!-- Ajoutez un champ pour la confirmation du mot de passe -->
+    <label for="confirm_password">Comfirmeé votre de mot de passe :</label>
+    <input type="password" id="confirm_password" name="confirm_password" required><br>
+
+    <input type="submit" value="Je crée mon compte">
+</form>
+
+<p>Vous avez deja un compte? <a href="{{ url_for('login') }}"><button>Me connecter</button> </a>.</p>
+
+</body>
+</html>

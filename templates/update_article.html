@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modifier un article</title>
+    <!-- Ajoutez le lien vers CKEditor -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.0.0/classic/ckeditor.js"></script>
+
+    <style>
+        
+        #description_hidden .ck-editor__editable {
+            min-height: 200px; 
+        }
+    </style>
+</head>
+<body>
+
+<h1>Modifier un article</h1>
+
+<form action="/edit/{{ article[0] }}" method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label for="title"><h3>Titre:</h3></label><br>
+        <!-- Utilisez un champ input de type texte pour le titre -->
+        <input type="text" id="title" name="title" value="{{ article[1]|safe }}" required><br><br>
+        <!-- Utilisez une balise <textarea> pour la description -->
+            <label for="title"><h3> Description:</h3></label><br>
+        <textarea id="description" name="description" placeholder="Saisissez la description de l'article" required>{{ article[2]|safe }}</textarea>
+    </div>
+
+    <!-- Ajoutez une balise <img> pour afficher l'image actuelle -->
+    <img src="{{ url_for('static', filename='images/' + article[5]) }}" alt="{{ article[1] }}" width="100"><br>
+
+    <label for="image">Nouvelle image :</label>
+    <!-- Ajoutez le champ d'upload d'image -->
+    <input type="file" name="image" id="image" accept="image/png, image/jpeg, image/jpg, image/gif"><br>
+
+    <input type="submit" value="Modifier">
+</form>
+
+<!-- Ajoutez le script d'initialisation de CKEditor pour la description de l'article -->
+<script>
+    // Initialiser CKEditor pour la description de l'article
+    ClassicEditor
+        .create(document.querySelector('#description'))
+        .then(editor => {
+            editor.setData(`{{ article[2]|safe }}`);
+            editor.model.document.on('change', () => {
+                // Mettez à jour le champ caché pour la description
+                document.querySelector('#description_hidden').value = editor.getData();
+            });
+        })
+        .catch(error => {
+            console.error(error);
+        });
+</script>
+
+
+</body>
+</html>

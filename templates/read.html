@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>liste d'article</title>
+    <!-- Inclure SweetAlert (utilisez la version en ligne pour faciliter) -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+       
+</head>
+<body>
+   
+{% if 'user_id' in session %}
+    <p>Connecté en tant qu'utilisateur {{ user_details[0] }} / {{ user_details[1] }}</p>
+    <a href="{{ url_for('hello_word') }}"><button>Editer un article</button></a>
+    <a href="{{ url_for('login', logout='true') }}"><button style="background-color: rgba(203, 39, 39, 0.68); margin-left: 800px;">Se déconnecter</button></a>
+{% endif %}
+
+    
+
+
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Utiliser SweetAlert pour afficher le pop-up
+            Swal.fire({
+                icon: '{{ messages[0].split(" ")[0] }}',  // Le type de message flash (success, danger, etc.)
+                title: '{{ messages[0].split(" ")[1:] | join(" ") }}',  // Le texte du message flash
+                showConfirmButton: false,  // Supprimer le bouton de confirmation
+                timer: 5000  // Fermer automatiquement le pop-up après 3 secondes
+            });
+        });
+    </script>
+  {% endif %}
+{% endwith %}
+
+
+
+{% if articles %}
+<h2>Liste des articles :</h2>
+<ul>
+    {% for article in articles %}
+        <li>
+    
+            <strong>{{ article[1]|safe }}</strong>
+            {{ article[2]|safe }}<br>
+            
+            <img src="{{ url_for('static', filename='images/' + article[5]) }}" alt="{{ article[1] }}" width="100">
+            <br>
+            Auteur: {{ get_author_name(article[4]) }}  <!-- Utilisation de la fonction get_author_name -->
+            <br>
+            <a href="{{ url_for('edit_article', article_id=article[0]) }}"><button>Modifier</button></a>
+            |
+            <a href="{{ url_for('delete_article', article_id=article[0]) }}" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet article ?')"><button style="color: brown;">Suprimes</button></a><hr>
+            
+        </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>Aucun article disponible.</p>
+{% endif %}
+
+
+
+
+
+
+</body>
+</html>

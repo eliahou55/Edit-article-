@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>page de creation</title>
+    <!-- Inclure SweetAlert (utilisez la version en ligne pour faciliter) -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+    <style>
+        .flash-messages {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .flash-message {
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .flash-success {
+            background-color: #28a745;  /* Couleur verte pour les messages de succès */
+        }
+
+        .flash-danger {
+            background-color: #dc3545;  /* Couleur rouge pour les messages d'erreur */
+        }
+
+        
+
+        #articleDescription .ck-editor__editable {
+            min-height: 200px; /* Ajustez cette valeur selon vos préférences */
+        }
+    </style>
+    <!-- Ajoutez le lien vers CKEditor -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.0.0/classic/ckeditor.js"></script>
+</head>
+<body>
+
+{% if 'user_id' in session %}
+    <p>Connecté en tant qu'utilisateur {{ user_details[0] }} / {{ user_details[1] }}</p>
+    <a href="{{ url_for('read') }}"><button>liste des article</button></a>
+    <a href="{{ url_for('login', logout='true') }}"><button style="background-color: rgba(203, 39, 39, 0.68); margin-left: 800px;">Se déconnecter</button></a>
+{% endif %}
+
+
+
+
+<h2>Ajouter un nouvel article ; c'est par ici 👇</h2>
+
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Utiliser SweetAlert pour afficher le pop-up
+            Swal.fire({
+                icon: '{{ messages[0].split(" ")[0] }}',  // Le type de message flash (success, danger, etc.)
+                title: '{{ messages[0].split(" ")[1:] | join(" ") }}',  // Le texte du message flash
+                showConfirmButton: false,  // Supprimer le bouton de confirmation
+                timer: 5000  // Fermer automatiquement le pop-up après 3 secondes
+            });
+        });
+    </script>
+  {% endif %}
+{% endwith %}
+
+<!-- Ajoutez le formulaire pour permettre la soumission des données -->
+<!-- ... Votre code existant ... -->
+
+<!-- Ajoutez le formulaire pour permettre la soumission des données -->
+<form action="/poster" method="post" enctype="multipart/form-data">
+    <section id="articleTitle">
+        <h2>Titre de l'article</h2>
+        <textarea id="title" name="title" placeholder="Saisissez le titre de l'article" required></textarea>
+    </section>
+
+    <section id="articleDescription">
+        <h2>Description de l'article</h2>
+        <div id="description" contenteditable="true" placeholder="Saisissez la description de l'article"></div>
+        <input type="hidden" id="description_hidden" name="description">
+    </section>
+
+    <!-- Ajoutez le champ d'upload d'image -->
+    <input type="file" name="image" id="image" accept="image/png, image/jpeg, image/jpg, image/gif" required>
+
+    <!-- Ajoutez le bouton de soumission -->
+    <button type="submit">Soumettre</button>
+</form>
+
+<!-- Ajoutez le script d'initialisation de CKEditor pour la description de l'article -->
+<script>
+    // Initialiser CKEditor pour la description de l'article
+    ClassicEditor
+        .create(document.querySelector('#articleDescription div'))
+        .then(editor => {
+            editor.model.document.on('change', () => {
+                document.querySelector('#description_hidden').value = editor.getData();
+            });
+        })
+        .catch(error => {
+            console.error(error);
+        });
+</script>
+
+<!-- ... Votre code existant ... -->
+
+
+
+</body>
+</html>
